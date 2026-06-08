@@ -16,7 +16,7 @@ export default function CatalogUser({ menu, loading, cart, addToCart, decreaseQt
 
   return (
     <>
-      {/* HERO SECTION DENGAN GRADIENT & AKXEN ESTETIK BARU */}
+      {/* HERO SECTION DENGAN GRADIENT & AKSEN ESTETIK BARU */}
       <section className="relative bg-gradient-to-br from-red-700 via-red-600 to-orange-500 text-white py-14 px-4 overflow-hidden shadow-md">
         {/* Ornamen Estetik Latar Belakang */}
         <div className="absolute top-[-50px] right-[-50px] w-40 h-40 bg-white/10 rounded-full blur-2xl"></div>
@@ -76,6 +76,7 @@ export default function CatalogUser({ menu, loading, cart, addToCart, decreaseQt
               {daftarKategori.map((kat) => (
                 <button
                   key={kat}
+                  type="button"
                   onClick={() => setActiveTab(kat)}
                   className={`px-4 py-2 rounded-xl font-extrabold text-xs transition-all duration-200 ${
                     activeTab === kat ? "bg-red-600 text-white shadow-md shadow-red-600/20 scale-105" : "bg-slate-50 text-slate-600 border border-slate-100 hover:bg-slate-100"
@@ -98,7 +99,7 @@ export default function CatalogUser({ menu, loading, cart, addToCart, decreaseQt
               className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-9 pr-4 py-2 text-xs font-semibold focus:outline-none focus:border-red-500 focus:bg-white transition-all shadow-inner"
             />
             {searchQuery && (
-              <button onClick={() => setSearchQuery("")} className="absolute right-3 top-2.5 text-xs font-bold text-slate-400 hover:text-slate-600">
+              <button type="button" onClick={() => setSearchQuery("")} className="absolute right-3 top-2.5 text-xs font-bold text-slate-400 hover:text-slate-600">
                 ×
               </button>
             )}
@@ -178,22 +179,27 @@ export default function CatalogUser({ menu, loading, cart, addToCart, decreaseQt
         )}
       </main>
 
-      {/* SIDEBAR DRAWER KERANJANG */}
+      {/* SIDEBAR DRAWER KERANJANG (PERBAIKAN TOTAL MODE MOBILE & DESKTOP RESPONSIVITAS) */}
       {isCartOpen && (
-        <div className="fixed inset-0 z-50 flex justify-end bg-black/40 backdrop-blur-sm">
+        <div className="fixed inset-0 z-50 flex justify-end bg-black/40 backdrop-blur-sm animate-fade-in">
           <div className="flex-grow" onClick={() => setIsCartOpen(false)}></div>
-          <div className="w-full max-w-md bg-white h-screen shadow-2xl flex flex-col justify-between p-6 overflow-y-auto border-l border-amber-100">
-            <div>
-              <div className="flex justify-between items-center border-b border-slate-100 pb-4 mb-4">
-                <div className="flex items-center gap-2 text-red-600">
-                  <ShoppingCart className="w-5 h-5" />
-                  <h4 className="font-black text-lg text-slate-800">Isi Mangkok Kamu</h4>
-                </div>
-                <button type="button" onClick={() => setIsCartOpen(false)} className="p-1 text-slate-400 bg-slate-50 rounded-full">
-                  <X className="w-5 h-5" />
-                </button>
-              </div>
 
+          {/* FIXED PANEL: Dikunci h-full dan max-h-screen agar stabil di laptop dan HP */}
+          <div className="w-full max-w-md bg-white h-full max-h-screen shadow-2xl flex flex-col justify-between border-l border-amber-100 animate-slide-left">
+            {/* A. HEADER PANEL (Tetap Diam / Sticky di Atas) */}
+            <div className="p-4 sm:p-5 border-b border-slate-100 flex justify-between items-center bg-slate-50 flex-shrink-0">
+              <div className="flex items-center gap-2 text-red-600">
+                <ShoppingCart className="w-5 h-5" />
+                <h4 className="font-black text-base sm:text-lg text-slate-800">Isi Mangkok Kamu</h4>
+              </div>
+              <button type="button" onClick={() => setIsCartOpen(false)} className="p-1.5 text-slate-400 bg-white hover:bg-slate-100 rounded-full border shadow-sm">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* B. AREA INTERNAL SCROLL: Menampung list menu belanjaan & input data pembeli */}
+            {/* Bagian ini flex-1 dan overflow-y-auto agar bebas di-scroll kebawah pas keyboard HP muncul */}
+            <div className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-5 pb-24 scrollbar-thin">
               {cart.length === 0 ? (
                 <div className="text-center py-20 text-slate-400 font-medium text-sm">
                   Mangkok masih kosong!
@@ -201,11 +207,12 @@ export default function CatalogUser({ menu, loading, cart, addToCart, decreaseQt
                   Yuk ambil topping pilihanmu.
                 </div>
               ) : (
-                <div className="space-y-3 max-h-[180px] overflow-y-auto pr-1">
+                /* List Item Belanja Topping */
+                <div className="space-y-2.5">
                   {cart.map((item) => (
                     <div key={item.id} className="flex justify-between items-center p-3 bg-slate-50 border border-slate-100 rounded-xl">
                       <div className="max-w-[55%]">
-                        <h5 className="font-bold text-slate-800 text-sm line-clamp-1">{item.nama_item}</h5>
+                        <h5 className="font-bold text-slate-800 text-xs sm:text-sm line-clamp-1">{item.nama_item}</h5>
                         <p className="text-xs text-red-600 font-black mt-0.5">
                           Rp {(item.harga * item.qty).toLocaleString("id-ID")} <span className="text-slate-400 font-normal">({item.qty}x)</span>
                         </p>
@@ -228,29 +235,17 @@ export default function CatalogUser({ menu, loading, cart, addToCart, decreaseQt
                   ))}
                 </div>
               )}
-            </div>
 
-            {cart.length > 0 && (
-              <div className="border-t border-slate-100 pt-3 mt-4 space-y-3">
-                <div className="bg-red-50 p-3.5 rounded-2xl border border-red-100">
-                  <div className="flex justify-between items-center text-xs font-bold text-slate-500">
-                    <span>Subtotal Racikan Prasmanan</span>
-                    <span>Rp {calculateTotal().toLocaleString("id-ID")}</span>
-                  </div>
-                  <div className="flex justify-between items-center pt-1.5 mt-1.5 border-t border-red-200/40">
-                    <span className="font-black text-slate-800 text-sm">Total Pembayaran</span>
-                    <span className="text-lg font-black text-red-600">Rp {calculateTotal().toLocaleString("id-ID")}</span>
-                  </div>
-                </div>
-
-                <form onSubmit={handleCheckoutSubmit} className="space-y-3 text-xs">
+              {/* Form Isian Alamat / Meja Pembeli */}
+              {cart.length > 0 && (
+                <form id="formCheckoutSeblak" onSubmit={handleCheckoutSubmit} className="space-y-4 text-xs pt-2 border-t border-slate-100">
                   <div className="grid grid-cols-2 gap-2">
                     {["Dine In", "Takeaway"].map((tipe) => (
                       <button
                         key={tipe}
                         type="button"
                         onClick={() => setCheckoutForm({ ...checkoutForm, tipeMakan: tipe })}
-                        className={`p-2 rounded-xl font-bold border text-center transition-all ${checkoutForm.tipeMakan === tipe ? "bg-slate-900 text-white border-slate-900 shadow-sm" : "bg-white text-slate-500 border-slate-200"}`}
+                        className={`p-2.5 rounded-xl font-bold border text-center transition-all ${checkoutForm.tipeMakan === tipe ? "bg-slate-900 text-white border-slate-900 shadow-sm" : "bg-white text-slate-500 border-slate-200"}`}
                       >
                         {tipe === "Dine In" ? "🍽️ Makan Sini" : "🛵 Bungkus / Antar"}
                       </button>
@@ -303,6 +298,7 @@ export default function CatalogUser({ menu, loading, cart, addToCart, decreaseQt
                       ))}
                     </div>
                   </div>
+
                   <div>
                     <div className="flex justify-between items-center mb-1">
                       <label className="font-bold text-slate-700 flex items-center gap-1">Tingkat Kepedasan: </label>
@@ -328,23 +324,42 @@ export default function CatalogUser({ menu, loading, cart, addToCart, decreaseQt
                       required
                       value={checkoutForm.nomorMejaAlamat}
                       onChange={(e) => setCheckoutForm({ ...checkoutForm, nomorMejaAlamat: e.target.value })}
-                      className="w-full bg-slate-50 border rounded-xl p-2.5 text-sm focus:outline-none focus:border-red-500"
+                      className="w-full bg-slate-50 border rounded-xl p-2.5 text-xs focus:outline-none focus:border-red-500"
                       placeholder={checkoutForm.tipeMakan === "Dine In" ? "Contoh: Meja 05" : "Contoh: Jl. Mawar No. 4B, Binjai"}
                     />
                   </div>
-
-                  <button
-                    type="submit"
-                    className={`w-full text-white font-black p-3.5 rounded-xl text-xs uppercase tracking-wider transition-colors flex items-center justify-center gap-1.5 shadow-md ${checkoutForm.tipeMakan === "Takeaway" ? "bg-emerald-600 hover:bg-emerald-700" : "bg-red-600 hover:bg-red-700"}`}
-                  >
-                    {checkoutForm.tipeMakan === "Takeaway" ? "KIRIM PESANAN VIA WHATSAPP 📱" : "PESAN LANGSUNG KE DAPUR 🍲"}
-                  </button>
                 </form>
+              )}
+            </div>
+
+            {/* C. FOOTER TOTAL HARGA & TOMBOL SUBMIT (Dikunci Mati Sticky di Dasar Komponen) */}
+            {cart.length > 0 && (
+              <div className="p-4 sm:p-5 border-t border-slate-100 bg-white flex-shrink-0 shadow-[0_-4px_20px_rgba(0,0,0,0.06)] z-20">
+                <div className="bg-red-50 p-3 rounded-xl border border-red-100/70 mb-3 text-xs">
+                  <div className="flex justify-between items-center font-bold text-slate-500">
+                    <span>Subtotal Racikan Prasmanan</span>
+                    <span>Rp {calculateTotal().toLocaleString("id-ID")}</span>
+                  </div>
+                  <div className="flex justify-between items-center pt-1.5 mt-1.5 border-t border-red-200/30">
+                    <span className="font-black text-slate-800">Total Pembayaran</span>
+                    <span className="text-base font-black text-red-600">Rp {calculateTotal().toLocaleString("id-ID")}</span>
+                  </div>
+                </div>
+
+                {/* Tombol submit dikoneksikan ke ID Form diatas via HTML5 attribute form="" */}
+                <button
+                  form="formCheckoutSeblak"
+                  type="submit"
+                  className={`w-full text-white font-black p-3.5 rounded-xl text-xs uppercase tracking-wider transition-colors flex items-center justify-center gap-1.5 shadow-md active:scale-98 ${checkoutForm.tipeMakan === "Takeaway" ? "bg-emerald-600 hover:bg-emerald-700" : "bg-red-600 hover:bg-red-700"}`}
+                >
+                  {checkoutForm.tipeMakan === "Takeaway" ? "KIRIM PESANAN VIA WHATSAPP 📱" : "PESAN LANGSUNG KE DAPUR 🍲"}
+                </button>
               </div>
             )}
           </div>
         </div>
       )}
+
       {/* FITUR BARU: STICKY FLOATING BASKET (KERANJANG MELAYANG) */}
       {totalItemsInCart > 0 && !isCartOpen && (
         <div className="fixed bottom-6 left-6 z-40 animate-fade-in md:bottom-8 md:right-8">
