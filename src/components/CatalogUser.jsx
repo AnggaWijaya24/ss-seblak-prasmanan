@@ -106,7 +106,7 @@ export default function CatalogUser({ menu, loading, cart, addToCart, decreaseQt
           </div>
         </div>
 
-        {/* LOGIKA SKELETON LOADING YANG KINI TERPISAH BERSIH (ANTI ANOMALI) */}
+        {/* LOGIKA SKELETON LOADING */}
         {loading ? (
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {[1, 2, 3, 4].map((n) => (
@@ -124,21 +124,20 @@ export default function CatalogUser({ menu, loading, cart, addToCart, decreaseQt
             ))}
           </div>
         ) : menuTersaring.length === 0 ? (
-          /* PERBAIKAN: Jika pembeli mencari topping yang tidak ada di rak, muncul pemberitahuan yang estetik */
           <div className="text-center py-16 bg-white rounded-3xl border border-dashed border-slate-200 text-slate-400 max-w-md mx-auto p-6 shadow-inner animate-fade-in">
             <div className="text-4xl mb-2">🔍❌</div>
             <h5 className="font-black text-slate-700 text-sm">Topping "{searchQuery}" Gak Ditemukan</h5>
             <p className="text-[11px] text-slate-400 mt-1">Coba cek ejaan kamu atau pilih varian bahan seblak mantap lainnya di tab kategori ya!</p>
           </div>
         ) : (
-          /* GRID UTAMA MENU DENGAN SENTUHAN VISUAL TAG TERLARIS */
+          /* GRID UTAMA MENU USER */
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 animate-fade-in">
             {menuTersaring.map((item) => {
               const apakahBestSeller = item.is_terlaris;
 
               return (
                 <div key={item.id} className={`bg-white rounded-2xl shadow-sm border border-amber-100 p-4 flex flex-col justify-between transition-all hover:shadow-md relative group ${!item.stok_tersedia && "opacity-60"}`}>
-                  {/* VISUAL TAG: Label kuning emas melayang yang sangat profesional */}
+                  {/* TAG BEST SELLER */}
                   {apakahBestSeller && item.stok_tersedia && (
                     <div className="absolute top-2 left-2 z-10 bg-gradient-to-r from-amber-500 to-amber-400 text-amber-950 font-black text-[9px] px-2 py-0.5 rounded-lg shadow-sm border border-amber-300 flex items-center gap-0.5 tracking-wider uppercase">
                       👑 Terlaris
@@ -146,13 +145,9 @@ export default function CatalogUser({ menu, loading, cart, addToCart, decreaseQt
                   )}
 
                   <div>
+                    {/* GAMBAR FIX POIN 1: Diubah ke object-contain agar proporsional dan tidak terpotong ekstrim */}
                     {item.gambar_url ? (
-                      <img
-                        src={item.gambar_url}
-                        alt={item.nama_item}
-                        loading="lazy"
-                        className="w-full h-32 object-cover rounded-xl mb-3 border border-amber-100 transition-transform duration-300 group-hover:scale-102 will-change-transform"
-                      />
+                      <img src={item.gambar_url} alt={item.nama_item} loading="lazy" className="w-full h-32 object-contain bg-slate-50 rounded-xl mb-3 border border-amber-100/60" />
                     ) : (
                       <div className="w-full h-32 bg-amber-50/60 rounded-xl flex flex-col items-center justify-center text-slate-400 font-bold text-xs mb-3 border border-dashed border-amber-100 gap-1">
                         <ImageIcon className="w-5 h-5 text-amber-200" /> Tanpa Foto
@@ -162,14 +157,23 @@ export default function CatalogUser({ menu, loading, cart, addToCart, decreaseQt
                     <h4 className="font-bold text-slate-800 mt-1 text-sm sm:text-base line-clamp-1">{item.nama_item}</h4>
                   </div>
 
-                  <div className="mt-4 pt-2 border-t border-slate-50 flex justify-between items-center">
-                    <span className="font-black text-red-600 text-sm sm:text-base">Rp {item.harga.toLocaleString("id-ID")}</span>
+                  {/* HARGA & TOMBOL FIX POIN 1: Menggunakan susunan horizontal yang pas agar nominal Rp tidak patah kebawah */}
+                  <div className="mt-4 pt-2 border-t border-slate-100 flex items-center justify-between gap-1">
+                    <div className="flex flex-row items-baseline gap-0.5 text-red-600 font-black text-sm sm:text-base whitespace-nowrap">
+                      <span>Rp</span>
+                      <span>{item.harga.toLocaleString("id-ID")}</span>
+                    </div>
+
                     {item.stok_tersedia ? (
-                      <button type="button" onClick={() => addToCart(item)} className="bg-red-50 hover:bg-red-600 hover:text-white text-red-600 font-bold text-xs px-3 py-1.5 rounded-lg transition-all border border-red-200 shadow-sm">
+                      <button
+                        type="button"
+                        onClick={() => addToCart(item)}
+                        className="bg-red-50 hover:bg-red-600 hover:text-white text-red-600 font-bold text-[11px] px-2.5 py-1.5 rounded-lg transition-all border border-red-200 shadow-sm flex-shrink-0"
+                      >
                         + Ambil
                       </button>
                     ) : (
-                      <span className="bg-slate-100 text-slate-400 font-bold text-[10px] px-2 py-1.5 rounded-lg">Habis</span>
+                      <span className="bg-slate-100 text-slate-400 font-bold text-[10px] px-2 py-1.5 rounded-lg flex-shrink-0">Habis</span>
                     )}
                   </div>
                 </div>
@@ -179,14 +183,13 @@ export default function CatalogUser({ menu, loading, cart, addToCart, decreaseQt
         )}
       </main>
 
-      {/* SIDEBAR DRAWER KERANJANG (PERBAIKAN TOTAL MODE MOBILE & DESKTOP RESPONSIVITAS) */}
+      {/* SIDEBAR DRAWER KERANJANG */}
       {isCartOpen && (
         <div className="fixed inset-0 z-50 flex justify-end bg-black/40 backdrop-blur-sm animate-fade-in">
           <div className="flex-grow" onClick={() => setIsCartOpen(false)}></div>
 
-          {/* FIXED PANEL: Dikunci h-full dan max-h-screen agar stabil di laptop dan HP */}
           <div className="w-full max-w-md bg-white h-full max-h-screen shadow-2xl flex flex-col justify-between border-l border-amber-100 animate-slide-left">
-            {/* A. HEADER PANEL (Tetap Diam / Sticky di Atas) */}
+            {/* HEADER PANEL */}
             <div className="p-4 sm:p-5 border-b border-slate-100 flex justify-between items-center bg-slate-50 flex-shrink-0">
               <div className="flex items-center gap-2 text-red-600">
                 <ShoppingCart className="w-5 h-5" />
@@ -197,8 +200,7 @@ export default function CatalogUser({ menu, loading, cart, addToCart, decreaseQt
               </button>
             </div>
 
-            {/* B. AREA INTERNAL SCROLL: Menampung list menu belanjaan & input data pembeli */}
-            {/* Bagian ini flex-1 dan overflow-y-auto agar bebas di-scroll kebawah pas keyboard HP muncul */}
+            {/* AREA INTERNAL SCROLL */}
             <div className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-5 pb-24 scrollbar-thin">
               {cart.length === 0 ? (
                 <div className="text-center py-20 text-slate-400 font-medium text-sm">
@@ -207,7 +209,6 @@ export default function CatalogUser({ menu, loading, cart, addToCart, decreaseQt
                   Yuk ambil topping pilihanmu.
                 </div>
               ) : (
-                /* List Item Belanja Topping */
                 <div className="space-y-2.5">
                   {cart.map((item) => (
                     <div key={item.id} className="flex justify-between items-center p-3 bg-slate-50 border border-slate-100 rounded-xl">
@@ -332,7 +333,7 @@ export default function CatalogUser({ menu, loading, cart, addToCart, decreaseQt
               )}
             </div>
 
-            {/* C. FOOTER TOTAL HARGA & TOMBOL SUBMIT (Dikunci Mati Sticky di Dasar Komponen) */}
+            {/* FOOTER TOTAL HARGA & TOMBOL SUBMIT */}
             {cart.length > 0 && (
               <div className="p-4 sm:p-5 border-t border-slate-100 bg-white flex-shrink-0 shadow-[0_-4px_20px_rgba(0,0,0,0.06)] z-20">
                 <div className="bg-red-50 p-3 rounded-xl border border-red-100/70 mb-3 text-xs">
@@ -346,7 +347,6 @@ export default function CatalogUser({ menu, loading, cart, addToCart, decreaseQt
                   </div>
                 </div>
 
-                {/* Tombol submit dikoneksikan ke ID Form diatas via HTML5 attribute form="" */}
                 <button
                   form="formCheckoutSeblak"
                   type="submit"
@@ -360,7 +360,7 @@ export default function CatalogUser({ menu, loading, cart, addToCart, decreaseQt
         </div>
       )}
 
-      {/* FITUR BARU: STICKY FLOATING BASKET (KERANJANG MELAYANG) */}
+      {/* STICKY FLOATING BASKET */}
       {totalItemsInCart > 0 && !isCartOpen && (
         <div className="fixed bottom-6 left-6 z-40 animate-fade-in md:bottom-8 md:right-8">
           <button

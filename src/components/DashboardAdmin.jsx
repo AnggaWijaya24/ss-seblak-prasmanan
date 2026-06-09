@@ -233,18 +233,21 @@ export default function DashboardAdmin({
                     </div>
 
                     {/* CONTROLLER PANEL ANTRIAN */}
-                    <div className="flex sm:flex-row md:flex-col items-center md:items-end justify-between w-full md:w-auto border-t md:border-t-0 pt-3 md:pt-0 gap-3 border-dashed">
+                    <div className="w-full md:w-auto border-t md:border-t-0 pt-3 md:pt-0 border-dashed border-slate-200 flex flex-row md:flex-col justify-between items-center md:items-end gap-3 flex-shrink-0">
                       <div className="text-left md:text-right">
-                        <span className="text-[10px] text-slate-400 font-bold block uppercase tracking-wider">Total Tagihan</span>
-                        <strong className="text-red-600 text-lg font-black tracking-tight">Rp {order.total_bayar.toLocaleString("id-ID")}</strong>
+                        <span className="text-[10px] text-slate-400 font-bold block uppercase tracking-wider leading-none">Total Tagihan</span>
+                        <div className="flex flex-row items-baseline gap-0.5 text-red-600 font-black text-base md:text-lg whitespace-nowrap mt-0.5">
+                          <span>Rp</span>
+                          <span>{order.total_bayar.toLocaleString("id-ID")}</span>
+                        </div>
                       </div>
 
-                      <div className="flex items-center gap-2 w-full sm:w-auto">
+                      <div className="flex items-center gap-1.5">
                         <button
                           type="button"
                           onClick={() => openConfirmModal("delete_order", order.id, order.nama_pemesan)}
-                          className="p-2.5 bg-white border-2 border-slate-200 hover:border-red-400 text-slate-400 hover:text-red-500 rounded-xl transition-all shadow-sm flex items-center justify-center"
-                          title="Batalkan / Hapus pesanan aktif ini"
+                          className="p-2 bg-white border border-slate-200 hover:border-red-400 text-slate-400 hover:text-red-500 rounded-xl transition-all shadow-xs flex items-center justify-center flex-shrink-0"
+                          title="Batalkan / Hapus pesanan"
                         >
                           <X className="w-4 h-4" />
                         </button>
@@ -252,7 +255,7 @@ export default function DashboardAdmin({
                         <button
                           type="button"
                           onClick={() => openEditOrderModal(order)}
-                          className="p-2.5 bg-white border-2 border-slate-200 hover:border-amber-400 text-slate-400 hover:text-amber-500 rounded-xl transition-all shadow-sm flex items-center justify-center"
+                          className="p-2 bg-white border border-slate-200 hover:border-amber-400 text-slate-400 hover:text-amber-500 rounded-xl transition-all shadow-xs flex items-center justify-center flex-shrink-0"
                           title="Ubah rincian pesanan"
                         >
                           <Edit3 className="w-4 h-4" />
@@ -262,7 +265,7 @@ export default function DashboardAdmin({
                           <button
                             type="button"
                             onClick={() => handleUpdateStatusOrder(order.id, "Sedang Dimasak")}
-                            className="bg-orange-500 hover:bg-orange-600 text-white text-xs font-black py-2.5 px-4 rounded-xl flex items-center gap-1 shadow transition-colors whitespace-nowrap"
+                            className="bg-orange-500 hover:bg-orange-600 text-white text-[11px] font-black py-2 px-3.5 rounded-xl flex items-center gap-1 shadow-sm transition-colors whitespace-nowrap"
                           >
                             🍳 Masak
                           </button>
@@ -270,7 +273,7 @@ export default function DashboardAdmin({
                           <button
                             type="button"
                             onClick={() => handleUpdateStatusOrder(order.id, "Selesai")}
-                            className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-black py-2.5 px-4 rounded-xl flex items-center gap-1 shadow transition-all whitespace-nowrap"
+                            className="bg-emerald-600 hover:bg-emerald-700 text-white text-[11px] font-black py-2 px-3.5 rounded-xl flex items-center gap-1 shadow-sm transition-all whitespace-nowrap"
                           >
                             ✅ Selesai
                           </button>
@@ -491,13 +494,7 @@ export default function DashboardAdmin({
             <div>
               <label className="block text-xs font-bold text-slate-600 mb-1">Foto Menu</label>
               <div className={`relative border-2 border-dashed rounded-xl p-4 text-center bg-slate-50/50 transition-colors ${uploading ? "border-amber-400 bg-amber-50/10" : "border-slate-200 cursor-pointer"}`}>
-                <input
-                  type="file"
-                  accept="image/*"
-                  disabled={uploading}
-                  onChange={handleFileChange} /* <-- FITUR BARU: Menggunakan fungsi pratinjau blob */
-                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer disabled:cursor-not-allowed"
-                />
+                <input type="file" accept="image/*" disabled={uploading} onChange={handleFileChange} className="absolute inset-0 w-full h-full opacity-0 cursor-pointer disabled:cursor-not-allowed" />
 
                 {/* LOGIKA MAKSIMAL INDIKATOR STATUS GAMBAR & LIVE LOCAL PREVIEW */}
                 {uploading ? (
@@ -545,83 +542,86 @@ export default function DashboardAdmin({
           </form>
         </div>
 
-        {/* KOLOM MASTER DATA DAFTAR RAK PRASMANAN (PERBAIKAN MARGIN GAZA AMAN GARIS KUNING) */}
-        <div className="md:col-span-2 bg-white p-6 rounded-3xl shadow-sm border border-amber-100">
+        {/* KOLOM MASTER DATA DAFTAR RAK PRASMANAN (PERBAIKAN TOTAL MODE MOBILE & DESKTOP) */}
+        <div className="md:col-span-2 bg-white p-4 sm:p-6 rounded-3xl shadow-sm border border-amber-100">
           <h4 className="font-bold text-slate-800 mb-4 text-base">Daftar Rak Prasmanan ({menu.length} Item)</h4>
-          {/* PERBAIKAN SAKTI: Ditambahkan padding horizontal (px-2) agar border garis kuning melingkar sempurna tanpa terpotong scrollbar */}
-          <div className="space-y-3 max-h-[400px] overflow-y-auto pr-2 px-2 pb-2">
+
+          <div className="space-y-3 max-h-[440px] overflow-y-auto pr-1 px-1 pb-2 scrollbar-thin">
             {menu.map((item) => {
-              // PERBAIKAN SAKTI: Komparasi ID menggunakan fungsi Number() yang aman dari bentrok String vs Integer
               const sedangDiEdit = isEditing && Number(editId) === Number(item.id);
 
               return (
                 <div
                   key={item.id}
-                  className={`flex justify-between items-center p-3 rounded-xl border transition-all duration-300 ${
+                  className={`p-3 rounded-2xl border flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 transition-all duration-300 ${
                     sedangDiEdit ? "border-amber-400 bg-amber-50/60 shadow-md ring-2 ring-amber-400/80 scale-[1.01]" : "border-slate-100 bg-slate-50"
                   }`}
                 >
-                  <div className="flex items-center gap-3">
+                  {/* SISI KIRI: Foto + Nama Bahan + Kategori & Harga */}
+                  <div className="flex items-center gap-3 w-full sm:w-auto">
                     {item.gambar_url ? (
                       <img
                         src={item.gambar_url}
                         loading="lazy"
                         alt={item.nama_item}
-                        className="w-10 h-10 object-cover rounded-lg border"
+                        className="w-12 h-12 object-cover rounded-xl border flex-shrink-0"
                         onError={(e) => {
                           e.target.onerror = null;
                           e.target.src = item.gambar_url;
                         }}
                       />
                     ) : (
-                      <div className="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center text-amber-800">
+                      <div className="w-12 h-12 bg-amber-100 rounded-xl flex items-center justify-center text-amber-800 flex-shrink-0">
                         <ImageIcon className="w-4 h-4" />
                       </div>
                     )}
-                    <div>
-                      <h5 className="font-bold text-slate-800 text-sm">{item.nama_item}</h5>
-                      <p className="text-xs font-bold text-red-600">
-                        Rp {item.harga.toLocaleString("id-ID")} <span className="text-[10px] font-extrabold bg-slate-200 text-slate-600 px-1 rounded ml-1">{item.kategori}</span>
-                      </p>
+
+                    <div className="min-w-0 flex-1">
+                      <h5 className="font-black text-slate-800 text-sm sm:text-base truncate">{item.nama_item}</h5>
+                      <div className="flex items-center gap-2 mt-0.5 flex-wrap">
+                        <span className="text-[9px] font-black uppercase tracking-wider bg-slate-200 text-slate-600 px-1.5 py-0.5 rounded">{item.kategori}</span>
+                        <span className="text-xs font-black text-red-600">Rp {item.harga.toLocaleString("id-ID")}</span>
+                      </div>
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-1.5">
-                    {/* BUTTON TERLARIS */}
+                  {/* SISI KANAN: Panel Tombol Kontrol Aksi */}
+                  <div className="flex items-center gap-1.5 w-full sm:w-auto justify-end border-t sm:border-t-0 pt-2.5 sm:pt-0 border-slate-200/60 flex-shrink-0">
                     <button
                       type="button"
                       onClick={() => handleToggleTerlaris(item.id, item.is_terlaris)}
-                      className={`p-1.5 rounded-lg border text-xs font-bold transition-colors ${item.is_terlaris ? "bg-amber-400 text-amber-950 border-amber-500" : "bg-slate-100 text-slate-400 border-slate-200 hover:bg-slate-200"}`}
+                      className={`px-2.5 py-1.5 rounded-xl border text-[10px] font-bold transition-colors flex items-center justify-center gap-0.5 ${
+                        item.is_terlaris ? "bg-amber-400 text-amber-950 border-amber-500 shadow-xs" : "bg-white text-slate-400 border-slate-200 hover:bg-slate-100"
+                      }`}
                       title={item.is_terlaris ? "Hapus dari menu terlaris" : "Jadikan menu terlaris"}
                     >
-                      {item.is_terlaris ? "⭐ Terlaris" : "☆ Biasa"}
+                      <span>{item.is_terlaris ? "⭐ Terlaris" : "☆ Biasa"}</span>
                     </button>
 
-                    {/* BUTTON STATUS STOK */}
                     <button
                       type="button"
                       onClick={() => handleToggleStok(item.id, item.stok_tersedia)}
-                      className={`p-1.5 rounded-lg border text-xs font-bold transition-colors ${item.stok_tersedia ? "bg-emerald-50 text-emerald-600 border-emerald-200 hover:bg-emerald-100" : "bg-rose-50 text-rose-600 border-rose-200 hover:bg-rose-100"}`}
+                      className={`px-2.5 py-1.5 rounded-xl border text-[10px] font-bold transition-colors flex items-center justify-center min-w-[65px] ${
+                        item.stok_tersedia ? "bg-emerald-500 text-white border-emerald-500 hover:bg-emerald-600" : "bg-rose-50 text-rose-600 border-rose-200 hover:bg-rose-100"
+                      }`}
                     >
-                      {item.stok_tersedia ? "Tersedia" : "Habis"}
+                      <span>{item.stok_tersedia ? "Tersedia" : "Habis"}</span>
                     </button>
 
-                    {/* BUTTON EDIT */}
                     <button
                       type="button"
                       onClick={() => startEdit(item)}
-                      className={`p-2 rounded-lg border transition-all duration-200 shadow-sm ${
+                      className={`p-2 rounded-xl border transition-all duration-200 shadow-sm ${
                         sedangDiEdit ? "bg-amber-500 text-white border-amber-500 animate-pulse" : "bg-white text-slate-400 border-slate-200 hover:border-amber-400 hover:text-amber-500 hover:bg-amber-50"
                       }`}
                     >
                       <Edit3 className="w-3.5 h-3.5" />
                     </button>
 
-                    {/* BUTTON HAPUS DENGAN TRANSISI HOVER MERAH PREMIUM */}
                     <button
                       type="button"
                       onClick={() => setDeleteModal({ show: true, itemId: item.id, itemName: item.nama_item })}
-                      className="p-2 text-slate-400 bg-white rounded-lg border border-slate-200 hover:border-red-500 hover:text-red-500 hover:bg-red-50 transition-all duration-200 shadow-sm"
+                      className="p-2 text-slate-400 bg-white rounded-xl border border-slate-200 hover:border-red-500 hover:text-red-500 hover:bg-red-50 transition-all duration-200 shadow-sm"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
                     </button>
