@@ -147,9 +147,20 @@ export default function CatalogUser({ menu, loading, cart, addToCart, decreaseQt
                   <div>
                     {/* GAMBAR FIX POIN 1: Diubah ke object-contain agar proporsional dan tidak terpotong ekstrim */}
                     {item.gambar_url ? (
-                      <img src={item.gambar_url} alt={item.nama_item} loading="lazy" className="w-full h-32 object-contain bg-slate-50 rounded-xl mb-3 border border-amber-100/60" />
+                      <img
+                        src={item.gambar_url}
+                        alt={item.nama_item}
+                        loading="lazy"
+                        // KUNCINYA DI SINI: Menggunakan object-cover dengan h-36 atau h-40
+                        // agar gambar mengisi penuh card secara proporsional baik di mobile maupun desktop
+                        className="w-full h-36 sm:h-40 object-cover bg-slate-50 rounded-xl mb-3 border border-slate-100 transition-transform duration-300 group-hover:scale-102"
+                        onError={(e) => {
+                          e.target.onerror = null;
+                          e.target.src = item.gambar_url;
+                        }}
+                      />
                     ) : (
-                      <div className="w-full h-32 bg-amber-50/60 rounded-xl flex flex-col items-center justify-center text-slate-400 font-bold text-xs mb-3 border border-dashed border-amber-100 gap-1">
+                      <div className="w-full h-36 sm:h-40 bg-amber-50/60 rounded-xl flex flex-col items-center justify-center text-slate-400 font-bold text-xs mb-3 border border-dashed border-amber-100 gap-1">
                         <ImageIcon className="w-5 h-5 text-amber-200" /> Tanpa Foto
                       </div>
                     )}
