@@ -130,13 +130,13 @@ export default function CatalogUser({ menu, loading, cart, addToCart, decreaseQt
             <p className="text-[11px] text-slate-400 mt-1">Coba cek ejaan kamu atau pilih varian bahan seblak mantap lainnya di tab kategori ya!</p>
           </div>
         ) : (
-          /* GRID UTAMA MENU USER */
+          /* GRID UTAMA KATALOG BARANG */
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 animate-fade-in">
             {menuTersaring.map((item) => {
               const apakahBestSeller = item.is_terlaris;
 
               return (
-                <div key={item.id} className={`bg-white rounded-2xl shadow-sm border border-amber-100 p-4 flex flex-col justify-between transition-all hover:shadow-md relative group ${!item.stok_tersedia && "opacity-60"}`}>
+                <div key={item.id} className={`bg-white rounded-2xl shadow-sm border border-amber-100 p-3 sm:p-4 flex flex-col justify-between transition-all hover:shadow-md relative group ${!item.stok_tersedia && "opacity-60"}`}>
                   {/* TAG BEST SELLER */}
                   {apakahBestSeller && item.stok_tersedia && (
                     <div className="absolute top-2 left-2 z-10 bg-gradient-to-r from-amber-500 to-amber-400 text-amber-950 font-black text-[9px] px-2 py-0.5 rounded-lg shadow-sm border border-amber-300 flex items-center gap-0.5 tracking-wider uppercase">
@@ -145,36 +145,32 @@ export default function CatalogUser({ menu, loading, cart, addToCart, decreaseQt
                   )}
 
                   <div>
-                    {/* GAMBAR FIX POIN 1: Diubah ke object-contain agar proporsional dan tidak terpotong ekstrim */}
+                    {/* AREA FOTO ADAPTIF (ANTI-ZOOM HP & ANTI-PECAH DESKTOP) */}
                     {item.gambar_url ? (
-                      <img
-                        src={item.gambar_url}
-                        alt={item.nama_item}
-                        loading="lazy"
-                        // KUNCINYA DI SINI: Menggunakan object-cover dengan h-36 atau h-40
-                        // agar gambar mengisi penuh card secara proporsional baik di mobile maupun desktop
-                        className="w-full h-36 sm:h-40 object-cover bg-slate-50 rounded-xl mb-3 border border-slate-100 transition-transform duration-300 group-hover:scale-102"
-                        onError={(e) => {
-                          e.target.onerror = null;
-                          e.target.src = item.gambar_url;
-                        }}
-                      />
+                      <div className="w-full h-32 sm:h-36 bg-slate-50 border border-slate-100/70 rounded-xl overflow-hidden mb-3 flex items-center justify-center">
+                        <img
+                          src={item.gambar_url}
+                          alt={item.nama_item}
+                          loading="lazy"
+                          // HAKIKAT RAHASIA: Di HP p-1.5 & object-contain (utuh), Di Desktop sm:p-0 & sm:object-cover (penuh megah)
+                          className="w-full h-full p-1.5 object-contain sm:p-0 sm:object-cover transition-transform duration-300 group-hover:scale-103 will-change-transform"
+                        />
+                      </div>
                     ) : (
-                      <div className="w-full h-36 sm:h-40 bg-amber-50/60 rounded-xl flex flex-col items-center justify-center text-slate-400 font-bold text-xs mb-3 border border-dashed border-amber-100 gap-1">
+                      <div className="w-full h-32 sm:h-36 bg-amber-50/60 rounded-xl flex flex-col items-center justify-center text-slate-400 font-bold text-xs mb-3 border border-dashed border-amber-100 gap-1">
                         <ImageIcon className="w-5 h-5 text-amber-200" /> Tanpa Foto
                       </div>
                     )}
-                    <span className="text-[10px] uppercase tracking-wider font-extrabold bg-slate-100 text-slate-600 px-2 py-0.5 rounded-md">{item.kategori}</span>
+                    <span className="text-[9px] uppercase tracking-wider font-extrabold bg-slate-100 text-slate-600 px-2 py-0.5 rounded-md">{item.kategori}</span>
                     <h4 className="font-bold text-slate-800 mt-1 text-sm sm:text-base line-clamp-1">{item.nama_item}</h4>
                   </div>
 
-                  {/* HARGA & TOMBOL FIX POIN 1: Menggunakan susunan horizontal yang pas agar nominal Rp tidak patah kebawah */}
+                  {/* FORM HARGA & TOMBOL AMBIL (RAPI SEJAJAR TIDAK PATAH BARIS) */}
                   <div className="mt-4 pt-2 border-t border-slate-100 flex items-center justify-between gap-1">
                     <div className="flex flex-row items-baseline gap-0.5 text-red-600 font-black text-sm sm:text-base whitespace-nowrap">
                       <span>Rp</span>
                       <span>{item.harga.toLocaleString("id-ID")}</span>
                     </div>
-
                     {item.stok_tersedia ? (
                       <button
                         type="button"
@@ -200,7 +196,7 @@ export default function CatalogUser({ menu, loading, cart, addToCart, decreaseQt
           <div className="flex-grow" onClick={() => setIsCartOpen(false)}></div>
 
           <div className="w-full max-w-md bg-white h-full max-h-screen shadow-2xl flex flex-col justify-between border-l border-amber-100 animate-slide-left">
-            {/* HEADER PANEL */}
+            {/* Header Panel */}
             <div className="p-4 sm:p-5 border-b border-slate-100 flex justify-between items-center bg-slate-50 flex-shrink-0">
               <div className="flex items-center gap-2 text-red-600">
                 <ShoppingCart className="w-5 h-5" />
@@ -211,7 +207,7 @@ export default function CatalogUser({ menu, loading, cart, addToCart, decreaseQt
               </button>
             </div>
 
-            {/* AREA INTERNAL SCROLL */}
+            {/* Area Internal Scroll */}
             <div className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-5 pb-24 scrollbar-thin">
               {cart.length === 0 ? (
                 <div className="text-center py-20 text-slate-400 font-medium text-sm">
@@ -248,7 +244,7 @@ export default function CatalogUser({ menu, loading, cart, addToCart, decreaseQt
                 </div>
               )}
 
-              {/* Form Isian Alamat / Meja Pembeli */}
+              {/* Form Input Pelanggan */}
               {cart.length > 0 && (
                 <form id="formCheckoutSeblak" onSubmit={handleCheckoutSubmit} className="space-y-4 text-xs pt-2 border-t border-slate-100">
                   <div className="grid grid-cols-2 gap-2">
@@ -336,7 +332,7 @@ export default function CatalogUser({ menu, loading, cart, addToCart, decreaseQt
                       required
                       value={checkoutForm.nomorMejaAlamat}
                       onChange={(e) => setCheckoutForm({ ...checkoutForm, nomorMejaAlamat: e.target.value })}
-                      className="w-full bg-slate-50 border rounded-xl p-2.5 text-xs focus:outline-none focus:border-red-500"
+                      className="w-full bg-slate-50 border rounded-xl p-2.5 text-sm focus:outline-none focus:border-red-500"
                       placeholder={checkoutForm.tipeMakan === "Dine In" ? "Contoh: Meja 05" : "Contoh: Jl. Mawar No. 4B, Binjai"}
                     />
                   </div>
@@ -344,7 +340,7 @@ export default function CatalogUser({ menu, loading, cart, addToCart, decreaseQt
               )}
             </div>
 
-            {/* FOOTER TOTAL HARGA & TOMBOL SUBMIT */}
+            {/* Footer Sticky */}
             {cart.length > 0 && (
               <div className="p-4 sm:p-5 border-t border-slate-100 bg-white flex-shrink-0 shadow-[0_-4px_20px_rgba(0,0,0,0.06)] z-20">
                 <div className="bg-red-50 p-3 rounded-xl border border-red-100/70 mb-3 text-xs">
