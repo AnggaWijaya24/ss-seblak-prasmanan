@@ -16,7 +16,7 @@ export default function LoginAdmin({ handleLogin, email, setEmail, password, set
       <form onSubmit={handleLogin} className="space-y-4 text-xs font-semibold text-slate-600">
         <div>
           <label className="block mb-1">Email / Username Admin</label>
-          <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} className="w-full bg-slate-50 border rounded-xl p-3 text-sm focus:outline-none focus:border-red-500" placeholder="admin@seblak.com" />
+          <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} className="w-full bg-slate-50 border rounded-xl p-3 text-sm focus:outline-none focus:border-red-500" placeholder="Username" />
         </div>
         <div>
           <label className="block mb-1">Password Keamanan</label>

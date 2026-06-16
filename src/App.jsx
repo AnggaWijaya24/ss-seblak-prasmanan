@@ -201,7 +201,7 @@ export default function App() {
 
     // 3. LOGIKA NOTIFIKASI & REDIRECT WHATSAPP INSTAN
     if (checkoutForm.tipeMakan === "Takeaway") {
-      const nomorWAAdmin = "6282177526903";
+      const nomorWAAdmin = "6282191975687";
       let teksWA = `*NOTIFIKASI ORDERAN SEBLAK BARU (TAKEAWAY)* 🛵\n\n`;
       teksWA += `👤 *Nama:* ${checkoutForm.nama}\n`;
       teksWA += `📱 *No. WA:* ${checkoutForm.whatsapp}\n`;
@@ -275,7 +275,7 @@ export default function App() {
       setEmail("");
       setPassword("");
       fetchOrders();
-      showToast("Selamat Datang Kembali, Ratu! 👑");
+      showToast("Selamat Datang Kembali, Admin! 👑");
     }
   }
 

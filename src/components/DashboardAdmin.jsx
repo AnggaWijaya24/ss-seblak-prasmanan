@@ -25,7 +25,7 @@ export default function DashboardAdmin({
   handleToggleTerlaris,
 }) {
   const [adminSubTab, setAdminSubTab] = useState("live");
-  const [imagePreview, setImagePreview] = useState(null); // State baru untuk pratinjau foto instan
+  const [imagePreview, setImagePreview] = useState(null);
 
   // STATE: Mengurus Modal Popup Edit Pesanan Pembeli
   const [isEditingOrder, setIsEditingOrder] = useState(false);
