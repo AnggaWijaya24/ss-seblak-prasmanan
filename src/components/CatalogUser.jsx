@@ -147,17 +147,21 @@ export default function CatalogUser({ menu, loading, cart, addToCart, decreaseQt
                   <div>
                     {/* AREA FOTO ADAPTIF (ANTI-ZOOM HP & ANTI-PECAH DESKTOP) */}
                     {item.gambar_url ? (
-                      <div className="w-full h-32 sm:h-36 bg-slate-50 border border-slate-100/70 rounded-xl overflow-hidden mb-3 flex items-center justify-center">
+                      <div className="w-full aspect-video bg-white rounded-xl overflow-hidden mb-3 flex items-center justify-center">
                         <img
                           src={item.gambar_url}
                           alt={item.nama_item}
                           loading="lazy"
-                          // HAKIKAT RAHASIA: Di HP p-1.5 & object-contain (utuh), Di Desktop sm:p-0 & sm:object-cover (penuh megah)
-                          className="w-full h-full p-1.5 object-contain sm:p-0 sm:object-cover transition-transform duration-300 group-hover:scale-103 will-change-transform"
+                          /* p-0.5 memberikan sedikit bantalan agar objek makanan tidak terlalu menempel ke tepi garis luar card */
+                          className="w-full h-full p-0.5 object-contain sm:p-0 sm:object-cover transition-transform duration-300 group-hover:scale-103 will-change-transform"
+                          onError={(e) => {
+                            e.target.onerror = null;
+                            e.target.src = item.gambar_url;
+                          }}
                         />
                       </div>
                     ) : (
-                      <div className="w-full h-32 sm:h-36 bg-amber-50/60 rounded-xl flex flex-col items-center justify-center text-slate-400 font-bold text-xs mb-3 border border-dashed border-amber-100 gap-1">
+                      <div className="w-full aspect-video bg-amber-50/60 rounded-xl flex flex-col items-center justify-center text-slate-400 font-bold text-xs mb-3 border border-dashed border-amber-100 gap-1">
                         <ImageIcon className="w-5 h-5 text-amber-200" /> Tanpa Foto
                       </div>
                     )}
