@@ -72,7 +72,7 @@ export default function CatalogUser({ menu, loading, cart, addToCart, decreaseQt
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-4 rounded-2xl border border-amber-100 shadow-sm">
           {/* TAB FILTER KATEGORI */}
           <div className="overflow-x-auto pb-1 scrollbar-none md:max-w-[70%]">
-            <div className="flex gap-2 min-w-max items-center">
+            <div className="flex gap-2 min-w-max items-center px-4 md:px-1">
               {daftarKategori.map((kat) => (
                 <button
                   key={kat}
